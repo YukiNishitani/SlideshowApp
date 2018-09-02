@@ -1,4 +1,3 @@
-//
 //  ViewController.swift
 //  SlideshowApp
 //
@@ -9,24 +8,31 @@
 import UIKit
 
 class ViewController: UIViewController {
+    @IBOutlet weak var Playbutton: UIButton!
+    var timer: Timer!
     @IBOutlet weak var imageView: UIButton!
     @IBAction func zoomUp(_ sender: Any) {
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
-        let viewController: zoomup = segue.destination as! zoomup
-        viewController.image = imageView.imageView?.image
+        if timer != nil{
+            timer.invalidate()
+            timer = nil
+        }
+        
+        let viewC: zoomup = segue.destination as! zoomup
+        viewC.imagez = imageView.imageView?.image
+        
     }
     
-    @IBOutlet weak var Playbutton: UIButton!
-    var timer: Timer!
+    
     @IBAction func AutoPlay(_ sender: Any) {
         if timer == nil{
-        Playbutton.setTitle("停止", for: .normal)
+            Playbutton.setTitle("停止", for: .normal)
             onNext.isEnabled = false
             onPrev.isEnabled = false
-        //タイマーを設定
-        timer = Timer.scheduledTimer(timeInterval: 2.0, target :self, selector: #selector(updateTimer(_:)), userInfo: nil, repeats: true)
+            //タイマーを設定
+            timer = Timer.scheduledTimer(timeInterval: 2.0, target :self, selector: #selector(updateTimer(_:)), userInfo: nil, repeats: true)
         } else {
             Playbutton.setTitle("再生", for: .normal)
             timer.invalidate()
@@ -39,7 +45,7 @@ class ViewController: UIViewController {
     
     
     @objc func updateTimer(_ timer: Timer){
-        dispImageNo -= 1
+        dispImageNo! += 1
         displayImage()
     }
     
@@ -47,7 +53,7 @@ class ViewController: UIViewController {
     
     @IBAction func onPrev(_ sender: Any) {
         //表示している画像の番号を1減らす
-        dispImageNo -= 1
+        dispImageNo! -= 1
         
         //表示している画像の番号を基に画像を表示する
         displayImage()
@@ -57,24 +63,26 @@ class ViewController: UIViewController {
     
     @IBAction func onNext(_ sender: Any) {
         //表示している画像の番号を1増やす
-        dispImageNo += 1
+        dispImageNo! += 1
         
         //表示している画像の番号を基に画像を表示する
         displayImage()
     }
     
     ///表示している画像の番号
-    var dispImageNo = 0
+    var dispImageNo: Int!
     
-    ///表示している画像の番号を基に画像を表示する
-    func displayImage(){
-        
-        //画像の名前の配列
-        let imageNameArray = [
+    //画像の名前の配列
+    let imageNameArray = [
         "DB9.jpg",
         "One-77.jpg",
         "Vulcan.jpg",
         ]
+    
+    ///表示している画像の番号を基に画像を表示する
+    func displayImage(){
+        
+        
         
         //画像の番号が正常な範囲を指しているかチェック
         
@@ -100,12 +108,22 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let image = UIImage(named: "DB9")
-        imageView.setImage(image, for: .normal)
+        dispImageNo = 0
+        //let image = UIImage(named: imageNameArray[dispImageNo])
+        //imageView.setImage(image, for: .normal)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        //timer.invalidate()
+        //timer = nil
+    }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let image = UIImage(named: imageNameArray[dispImageNo])
+        imageView.setImage(image, for: .normal)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -114,6 +132,5 @@ class ViewController: UIViewController {
         
     }
     
-
+    
 }
-

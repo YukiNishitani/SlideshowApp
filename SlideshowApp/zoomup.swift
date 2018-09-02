@@ -10,12 +10,12 @@ import UIKit
 
 class zoomup: UIViewController {
     @IBOutlet weak var ImageView: UIImageView!
-    var image: UIImage?
+    var imagez: UIImage?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ImageView.image = image
+        ImageView.image = imagez
 
         // Do any additional setup after loading the view.
     }
